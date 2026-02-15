@@ -145,8 +145,9 @@
 /* Screen Responsiveness */
 /* Locate the Screen Responsiveness section at the end of your <style> block and replace it with this: */
 
-// --- FIX IS HERE ---
-    /* Screen Responsiveness (Mobile) */
+/* Locate the end of your <style> block and replace the Screen Responsiveness section with this: */
+
+    /* Mobile View: Stacks columns vertically */
     @media screen and (max-width: 800px) {
         .calendar-section { 
             grid-template-columns: 1fr !important; 
@@ -156,17 +157,22 @@
         }
     }
 
-    /* Print Optimization (Ensures 3 columns on paper) */
+    /* Print View: Forces the original multi-column layout */
     @media print {
         .calendar-section { 
             grid-template-columns: repeat(3, 1fr) !important; 
+            display: grid !important;
+            gap: 4px !important;
         }
         .assignment-section { 
             grid-template-columns: 1fr 1fr !important; 
+            display: grid !important;
+            gap: 6px !important;
         }
-// --- END OF FIX ---
         @page { size: A4; margin: 0.5cm; }
-        nav { display: none; }
+        nav { display: none !important; }
+    }
+
 </style>
 </head>
 <body>
