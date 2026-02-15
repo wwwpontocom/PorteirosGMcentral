@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
@@ -142,10 +142,12 @@
         .highlight { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
         .month-name, .assign-header { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
     }
-/* Screen Responsiveness */
-/* Locate the Screen Responsiveness section at the end of your <style> block and replace it with this: */
+
+    /* Screen Responsiveness */
+  /* Locate the Screen Responsiveness section at the end of your <style> block and replace it with this: */
 
 /* Locate the end of your <style> block and replace the Screen Responsiveness section with this: */
+
 
     /* Mobile View: Stacks columns vertically */
     @media screen and (max-width: 800px) {
@@ -172,6 +174,7 @@
         @page { size: A4; margin: 0.5cm; }
         nav { display: none !important; }
     }
+
 
 </style>
 </head>
@@ -408,6 +411,7 @@
 <script>
    // --- FIX IS HERE ---
 // Replace the existing script with this logic to enable cross-table highlighting
+// --- FIX IS HERE ---
 function syncAndHighlight() {
     const nameSelect = document.getElementById('nameSelect');
     const groupSelect = document.getElementById('groupSelect');
@@ -416,24 +420,47 @@ function syncAndHighlight() {
 
     let targetGroup = selectedGroup;
     let targetRodizios = [];
+    let postMap = {};
 
     // Reset all previous highlights and focuses
     document.querySelectorAll('.row-data').forEach(row => {
         row.classList.remove('highlight');
-        row.querySelectorAll('td').forEach(td => td.classList.remove('cell-focus'));
+        row.querySelectorAll('td').forEach(td => {
+            td.classList.remove('cell-focus');
+            td.removeAttribute('title');
+        });
     });
 
     if (selectedName) {
-        // Find which group and rodizio the person belongs to
+        // Helper to check for exact name match in a string (handling line breaks)
+        const isExactMatch = (fullText, searchName) => {
+            const namesArray = fullText.split(/[\n,]+/).map(n => n.trim().toLowerCase());
+            return namesArray.includes(searchName.toLowerCase());
+        };
+
+        // 1. Identify Group, Rodizios, and the specific Post
         document.querySelectorAll('.assignment-section .row-data').forEach(row => {
-            const names = row.getAttribute('data-names') || "";
-            if (names.toLowerCase().includes(selectedName.toLowerCase())) {
-                targetGroup = row.getAttribute('data-group');
-                targetRodizios.push(row.getAttribute('data-rodizio'));
+            const namesAttr = row.getAttribute('data-names') || "";
+            const rowGroup = row.getAttribute('data-group');
+            const rowRodizio = row.getAttribute('data-rodizio');
+
+            if (isExactMatch(namesAttr, selectedName)) {
+                targetGroup = rowGroup;
+                targetRodizios.push(rowRodizio);
+
+                const cells = row.querySelectorAll('td');
+                const headers = ["", "", "FRENTE", "LATERAL", "BANHEIRO", "ESTACIONAMENTO / APOIO"];
+                for (let i = 2; i <= 5; i++) {
+                    if (isExactMatch(cells[i].innerText, selectedName)) {
+                        postMap[`${rowGroup}-${rowRodizio}`] = headers[i];
+                        cells[i].classList.add('cell-focus');
+                        break;
+                    }
+                }
             }
         });
 
-        // Apply highlighting to rows and specific cells (the "place")
+        // 2. Apply highlighting and the Hover Prompt (Tooltip)
         document.querySelectorAll('.row-data').forEach(row => {
             const rowGroup = row.getAttribute('data-group');
             const rowRodizio = row.getAttribute('data-rodizio');
@@ -441,16 +468,22 @@ function syncAndHighlight() {
             if (rowGroup === targetGroup && targetRodizios.includes(rowRodizio)) {
                 row.classList.add('highlight');
                 
-                // Identify and highlight the specific "place" (cell)
+                const assignedPost = postMap[`${rowGroup}-${rowRodizio}`];
+                if (assignedPost) {
+                    row.querySelectorAll('td').forEach(td => {
+                        td.setAttribute('title', `Você está na: ${assignedPost}`);
+                    });
+                }
+
+                // Focus the cell in the assignment table only
                 row.querySelectorAll('td').forEach(td => {
-                    if (td.innerText.toLowerCase().includes(selectedName.toLowerCase())) {
+                    if (isExactMatch(td.innerText, selectedName)) {
                         td.classList.add('cell-focus');
                     }
                 });
             }
         });
     } else if (selectedGroup) {
-        // Just highlight the whole group if no name is selected
         document.querySelectorAll('.row-data').forEach(row => {
             if (row.getAttribute('data-group') === selectedGroup) {
                 row.classList.add('highlight');
@@ -458,6 +491,8 @@ function syncAndHighlight() {
         });
     }
 }
+// --- END OF FIX ---
+
 </script>
 
 </body>
