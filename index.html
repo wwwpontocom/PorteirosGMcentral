@@ -143,12 +143,30 @@
         .month-name, .assign-header { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
     }
 /* Screen Responsiveness */
-    @media (max-width: 800px) {
-.calendar-section { 
+/* Locate the Screen Responsiveness section at the end of your <style> block and replace it with this: */
+
+// --- FIX IS HERE ---
+    /* Screen Responsiveness (Mobile) */
+    @media screen and (max-width: 800px) {
+        .calendar-section { 
             grid-template-columns: 1fr !important; 
         }
-        .assignment-section { grid-template-columns: 1fr; }
+        .assignment-section { 
+            grid-template-columns: 1fr !important; 
+        }
     }
+
+    /* Print Optimization (Ensures 3 columns on paper) */
+    @media print {
+        .calendar-section { 
+            grid-template-columns: repeat(3, 1fr) !important; 
+        }
+        .assignment-section { 
+            grid-template-columns: 1fr 1fr !important; 
+        }
+// --- END OF FIX ---
+        @page { size: A4; margin: 0.5cm; }
+        nav { display: none; }
 </style>
 </head>
 <body>
