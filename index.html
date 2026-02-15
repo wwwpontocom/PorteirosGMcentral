@@ -142,10 +142,11 @@
         .highlight { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
         .month-name, .assign-header { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
     }
-
-    /* Screen Responsiveness */
+/* Screen Responsiveness */
     @media (max-width: 800px) {
-        .calendar-section { grid-template-columns: 1fr 1fr; }
+// --- FIX IS HERE ---
+        .calendar-section { grid-template-columns: 1fr; }
+// --- END OF FIX ---
         .assignment-section { grid-template-columns: 1fr; }
     }
 </style>
