@@ -14,10 +14,68 @@
     /* Base Font & Margins */
     body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 5px; background: #fff; line-height: 1.1; }
     
-    nav { 
-        background: #f8f9fa; padding: 10px; border-bottom: 2px solid var(--primary-blue);
-        display: flex; gap: 15px; flex-wrap: wrap; margin-bottom: 10px;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+   nav { 
+        background: linear-gradient(to bottom, #ffffff, #f1f3f5);
+        padding: 12px 20px;
+        border-bottom: 3px solid var(--primary-blue);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 20px;
+        flex-wrap: wrap;
+        margin-bottom: 15px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    }
+
+    .nav-group {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    nav label {
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: var(--primary-blue);
+        text-transform: uppercase;
+    }
+
+    nav select {
+        padding: 6px 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-family: inherit;
+        font-size: 0.85rem;
+        background-color: white;
+        cursor: pointer;
+        transition: border-color 0.2s;
+    }
+
+    nav select:focus {
+        border-color: var(--primary-blue);
+        outline: none;
+    }
+
+    nav button {
+        background-color: var(--primary-blue);
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 4px;
+        font-weight: bold;
+        font-size: 0.8rem;
+        cursor: pointer;
+        transition: background 0.3s, transform 0.1s;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    nav button:hover {
+        background-color: #003399;
+    }
+
+    nav button:active {
+        transform: translateY(1px);
     }
     
     .main-header { 
@@ -96,9 +154,9 @@
 
 <nav>
     <div class="nav-group">
-        <label>Nome:</label>
+        <label for="nameSelect">Irmão(ã):</label>
         <select id="nameSelect" onchange="syncAndHighlight()">
-            <option value="">Todos</option>
+            <option value="">-- Selecione um Nome --</option>
             <optgroup label="Grupo A">
                 <option value="Pelino">Pelino</option><option value="Maria">Maria</option>
                 <option value="Pedro">Pedro</option><option value="Odete">Odete</option>
@@ -132,9 +190,9 @@
         </select>
     </div>
     <div class="nav-group">
-        <label>Grupo:</label>
+        <label for="groupSelect">Grupo:</label>
         <select id="groupSelect" onchange="syncAndHighlight()">
-            <option value="">Todos</option>
+            <option value="">-- Todos os Grupos --</option>
             <option value="GRUPO A">GRUPO A</option>
             <option value="GRUPO B">GRUPO B</option>
             <option value="GRUPO C">GRUPO C</option>
@@ -142,7 +200,7 @@
             <option value="GRUPO E">GRUPO E</option>
         </select>
     </div>
-    <button onclick="window.print()">Imprimir PDF</button>
+    <button onclick="window.print()">Imprimir</button>
 </nav>
 
 <div class="main-header">IRMÃOS / IRMÃS - 1º SEMESTRE 2026</div>
