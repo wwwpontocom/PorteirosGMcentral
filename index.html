@@ -432,7 +432,6 @@ function syncAndHighlight() {
         const assignmentRows = Array.from(document.querySelectorAll('.assignment-section .row-data'))
             .filter(row => {
                 const namesAttr = row.getAttribute('data-names') || "";
-                // FIX: Match exact name within the comma-separated data-names attribute
                 const nameList = namesAttr.split(',').map(n => n.trim());
                 return nameList.includes(selectedName) || (selectedName === "Inês" && nameList.includes("Ines"));
             });
@@ -447,7 +446,6 @@ function syncAndHighlight() {
                 const headers = document.querySelectorAll('.assign-header td');
                 
                 for(let i = 2; i < cells.length; i++) {
-                    // FIX: Check for exact name match in the cell text
                     const cellNames = cells[i].innerText.split('\n').map(n => n.trim());
                     if(cellNames.includes(selectedName) || (selectedName === "Inês" && cellNames.includes("Ines"))) {
                         rodizioMap[rodNum] = headers[i].innerText.replace('\n', ' ');
@@ -460,11 +458,10 @@ function syncAndHighlight() {
                     row.classList.add('highlight');
                     const rodNum = row.getAttribute('data-rodizio');
                     const local = rodizioMap[rodNum] || "Escalado";
-                    row.setAttribute('data-tooltip-text', ` ${local}`);
+                    row.setAttribute('data-tooltip-text', `Você está: ${local}`);
                 });
             
             document.querySelectorAll('.assignment-section td').forEach(td => {
-                // FIX: Use exact match to prevent "Maria" matching "Maria Jasiel"
                 const cellNames = td.innerText.split('\n').map(n => n.trim());
                 if (cellNames.includes(selectedName) || (selectedName === "Inês" && cellNames.includes("Ines"))) {
                     td.parentElement.classList.add('highlight');
@@ -477,64 +474,84 @@ function syncAndHighlight() {
             .forEach(row => row.classList.add('highlight'));
     }
 }
-// --- REST OF TOOLTIP LOGIC REMAINS THE SAME ---
 
-// TOOLTIP LOGIC (Unified for both Calendar and Assignments)
-document.querySelectorAll('.row-data td').forEach(td => {
-    td.addEventListener('mouseenter', function(e) {
-        const row = this.parentElement;
-        let tooltipContent = "";
+// TOOLTIP LOGIC (Sticky for Touch with Close Button)
+function showTooltip(e, td) {
+    const row = td.parentElement;
+    let tooltipContent = "";
 
-        // Case A: Hovering over Calendar (show Position)
-        if (row.closest('.calendar-section') && row.classList.contains('highlight')) {
-            tooltipContent = row.getAttribute('data-tooltip-text');
-        } 
-        // Case B: Hovering over Assignment Table (show Place instead of count)
-        else if (row.closest('.assignment-section')) {
-            const colIndex = this.cellIndex;
-            const headers = row.closest('table').querySelectorAll('.assign-header td');
-            const place = headers[colIndex] ? headers[colIndex].innerText.replace('\n', ' ') : "";
-            
-            const name = this.innerText.trim();
-            if (name && name.length > 2 && name !== "GRUPO" && colIndex >= 2) {
-                tooltipContent = `<strong>${place}</strong>`;
-            }
+    if (row.closest('.calendar-section') && row.classList.contains('highlight')) {
+        tooltipContent = row.getAttribute('data-tooltip-text');
+    } else if (row.closest('.assignment-section')) {
+        const colIndex = td.cellIndex;
+        const headers = row.closest('table').querySelectorAll('.assign-header td');
+        const place = headers[colIndex] ? headers[colIndex].innerText.replace('\n', ' ') : "";
+        const name = td.innerText.trim();
+        if (name && name.length > 2 && name !== "GRUPO" && colIndex >= 2) {
+            tooltipContent = `<strong>${place}</strong>`;
+        }
+    }
+
+    if (tooltipContent) {
+        let tooltip = document.getElementById('stat-tooltip');
+        if (!tooltip) {
+            tooltip = document.createElement('div');
+            tooltip.id = 'stat-tooltip';
+            document.body.appendChild(tooltip);
+        }
+        
+        // Added Close X Button
+        tooltip.innerHTML = `${tooltipContent} <span id="close-tooltip" style="margin-left:10px; cursor:pointer; font-weight:bold; padding:0 2px;">&times;</span>`;
+        
+        tooltip.style.cssText = `position:fixed; background:#002060; color:#fff; padding:6px 12px; 
+                                 border-radius:4px; font-size:0.75rem; z-index:1000; 
+                                 pointer-events:auto; box-shadow: 2px 2px 8px rgba(0,0,0,0.3);
+                                 display: flex; align-items: center; justify-content: space-between;`;
+        
+        if (tooltipContent.includes("Você está") || row.closest('.assignment-section')) {
+            tooltip.style.background = "#e6ff00";
+            tooltip.style.color = "#000";
+            tooltip.style.border = "1px solid #000";
         }
 
-        if (tooltipContent) {
-            const tooltip = document.createElement('div');
-            tooltip.id = 'stat-tooltip';
-            tooltip.innerHTML = tooltipContent;
-            tooltip.style.cssText = `position:fixed; background:#002060; color:#fff; padding:6px 12px; 
-                                     border-radius:4px; font-size:0.75rem; z-index:1000; 
-                                     pointer-events:none; box-shadow: 2px 2px 8px rgba(0,0,0,0.3);`;
-            
-            if (tooltipContent.includes("Você está") || row.closest('.assignment-section')) {
-                tooltip.style.background = "#e6ff00";
-                tooltip.style.color = "#000";
-                tooltip.style.border = "1px solid #000";
-            }
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+        tooltip.style.top = (clientY + 15) + 'px';
+        tooltip.style.left = (clientX + 15) + 'px';
+        
+        if (e.touches) tooltip.setAttribute('data-is-touch', 'true');
 
-            document.body.appendChild(tooltip);
-            updateTooltipPos(e);
+        // Close button functionality
+        document.getElementById('close-tooltip').addEventListener('click', () => tooltip.remove());
+    }
+}
+
+document.querySelectorAll('.row-data td').forEach(td => {
+    td.addEventListener('mouseenter', (e) => showTooltip(e, td));
+    td.addEventListener('touchstart', (e) => showTooltip(e, td), {passive: true});
+
+    td.addEventListener('mousemove', (e) => {
+        const t = document.getElementById('stat-tooltip');
+        if (t && !t.hasAttribute('data-is-touch')) {
+            t.style.top = (e.clientY + 15) + 'px';
+            t.style.left = (e.clientX + 15) + 'px';
         }
     });
 
-    td.addEventListener('mousemove', updateTooltipPos);
-    td.addEventListener('mouseleave', () => {
+    td.addEventListener('mouseleave', (e) => {
         const t = document.getElementById('stat-tooltip');
-        if(t) t.remove();
+        // Prevent removal if the mouse is moving into the tooltip itself to click the X
+        if(t && !t.hasAttribute('data-is-touch') && e.relatedTarget !== t) t.remove();
     });
 });
 
-function updateTooltipPos(e) {
+document.addEventListener('touchstart', (e) => {
     const t = document.getElementById('stat-tooltip');
-    if (t) {
-        t.style.top = (e.clientY + 15) + 'px';
-        t.style.left = (e.clientX + 15) + 'px';
+    if (t && !e.target.closest('td') && !e.target.closest('#stat-tooltip')) {
+        t.remove();
     }
-}
-// --- END OF FIX ---
+}, {passive: true});
+// --- END OF FIX --- 
 
 </script>
 
