@@ -415,80 +415,123 @@
 function syncAndHighlight() {
     const nameSelect = document.getElementById('nameSelect');
     const groupSelect = document.getElementById('groupSelect');
-    const selectedName = nameSelect.value;
+    let selectedName = nameSelect.value;
     const selectedGroup = groupSelect.value;
 
-    let targetGroup = selectedGroup;
-    let targetRodizios = [];
-    let postMap = {};
+    if (selectedName === "Ines") selectedName = "Inês";
 
-    // Reset all previous highlights and focuses
     document.querySelectorAll('.row-data').forEach(row => {
         row.classList.remove('highlight');
         row.querySelectorAll('td').forEach(td => {
             td.classList.remove('cell-focus');
-            td.removeAttribute('title');
+            td.removeAttribute('data-tooltip-text');
         });
     });
 
     if (selectedName) {
-        // Helper to check for exact name match in a string (handling line breaks)
-        const isExactMatch = (fullText, searchName) => {
-            const namesArray = fullText.split(/[\n,]+/).map(n => n.trim().toLowerCase());
-            return namesArray.includes(searchName.toLowerCase());
-        };
+        const assignmentRows = Array.from(document.querySelectorAll('.assignment-section .row-data'))
+            .filter(row => {
+                const namesAttr = row.getAttribute('data-names') || "";
+                // FIX: Match exact name within the comma-separated data-names attribute
+                const nameList = namesAttr.split(',').map(n => n.trim());
+                return nameList.includes(selectedName) || (selectedName === "Inês" && nameList.includes("Ines"));
+            });
+        
+        if (assignmentRows.length > 0) {
+            const group = assignmentRows[0].getAttribute('data-group');
+            const rodizioMap = {};
 
-        // 1. Identify Group, Rodizios, and the specific Post
-        document.querySelectorAll('.assignment-section .row-data').forEach(row => {
-            const namesAttr = row.getAttribute('data-names') || "";
-            const rowGroup = row.getAttribute('data-group');
-            const rowRodizio = row.getAttribute('data-rodizio');
-
-            if (isExactMatch(namesAttr, selectedName)) {
-                targetGroup = rowGroup;
-                targetRodizios.push(rowRodizio);
-
+            assignmentRows.forEach(row => {
+                const rodNum = row.getAttribute('data-rodizio');
                 const cells = row.querySelectorAll('td');
-                const headers = ["", "", "FRENTE", "LATERAL", "BANHEIRO", "ESTACIONAMENTO / APOIO"];
-                for (let i = 2; i <= 5; i++) {
-                    if (isExactMatch(cells[i].innerText, selectedName)) {
-                        postMap[`${rowGroup}-${rowRodizio}`] = headers[i];
-                        cells[i].classList.add('cell-focus');
-                        break;
-                    }
-                }
-            }
-        });
-
-        // 2. Apply highlighting and the Hover Prompt (Tooltip)
-        document.querySelectorAll('.row-data').forEach(row => {
-            const rowGroup = row.getAttribute('data-group');
-            const rowRodizio = row.getAttribute('data-rodizio');
-
-            if (rowGroup === targetGroup && targetRodizios.includes(rowRodizio)) {
-                row.classList.add('highlight');
+                const headers = document.querySelectorAll('.assign-header td');
                 
-                const assignedPost = postMap[`${rowGroup}-${rowRodizio}`];
-                if (assignedPost) {
-                    row.querySelectorAll('td').forEach(td => {
-                        td.setAttribute('title', `Você está na: ${assignedPost}`);
-                    });
-                }
-
-                // Focus the cell in the assignment table only
-                row.querySelectorAll('td').forEach(td => {
-                    if (isExactMatch(td.innerText, selectedName)) {
-                        td.classList.add('cell-focus');
+                for(let i = 2; i < cells.length; i++) {
+                    // FIX: Check for exact name match in the cell text
+                    const cellNames = cells[i].innerText.split('\n').map(n => n.trim());
+                    if(cellNames.includes(selectedName) || (selectedName === "Inês" && cellNames.includes("Ines"))) {
+                        rodizioMap[rodNum] = headers[i].innerText.replace('\n', ' ');
                     }
+                }
+            });
+
+            document.querySelectorAll(`.calendar-section .row-data[data-group="${group}"]`)
+                .forEach(row => {
+                    row.classList.add('highlight');
+                    const rodNum = row.getAttribute('data-rodizio');
+                    const local = rodizioMap[rodNum] || "Escalado";
+                    row.setAttribute('data-tooltip-text', ` ${local}`);
                 });
-            }
-        });
+            
+            document.querySelectorAll('.assignment-section td').forEach(td => {
+                // FIX: Use exact match to prevent "Maria" matching "Maria Jasiel"
+                const cellNames = td.innerText.split('\n').map(n => n.trim());
+                if (cellNames.includes(selectedName) || (selectedName === "Inês" && cellNames.includes("Ines"))) {
+                    td.parentElement.classList.add('highlight');
+                    td.classList.add('cell-focus');
+                }
+            });
+        }
     } else if (selectedGroup) {
-        document.querySelectorAll('.row-data').forEach(row => {
-            if (row.getAttribute('data-group') === selectedGroup) {
-                row.classList.add('highlight');
+        document.querySelectorAll(`.row-data[data-group="${selectedGroup}"]`)
+            .forEach(row => row.classList.add('highlight'));
+    }
+}
+// --- REST OF TOOLTIP LOGIC REMAINS THE SAME ---
+
+// TOOLTIP LOGIC (Unified for both Calendar and Assignments)
+document.querySelectorAll('.row-data td').forEach(td => {
+    td.addEventListener('mouseenter', function(e) {
+        const row = this.parentElement;
+        let tooltipContent = "";
+
+        // Case A: Hovering over Calendar (show Position)
+        if (row.closest('.calendar-section') && row.classList.contains('highlight')) {
+            tooltipContent = row.getAttribute('data-tooltip-text');
+        } 
+        // Case B: Hovering over Assignment Table (show Place instead of count)
+        else if (row.closest('.assignment-section')) {
+            const colIndex = this.cellIndex;
+            const headers = row.closest('table').querySelectorAll('.assign-header td');
+            const place = headers[colIndex] ? headers[colIndex].innerText.replace('\n', ' ') : "";
+            
+            const name = this.innerText.trim();
+            if (name && name.length > 2 && name !== "GRUPO" && colIndex >= 2) {
+                tooltipContent = `<strong>${place}</strong>`;
             }
-        });
+        }
+
+        if (tooltipContent) {
+            const tooltip = document.createElement('div');
+            tooltip.id = 'stat-tooltip';
+            tooltip.innerHTML = tooltipContent;
+            tooltip.style.cssText = `position:fixed; background:#002060; color:#fff; padding:6px 12px; 
+                                     border-radius:4px; font-size:0.75rem; z-index:1000; 
+                                     pointer-events:none; box-shadow: 2px 2px 8px rgba(0,0,0,0.3);`;
+            
+            if (tooltipContent.includes("Você está") || row.closest('.assignment-section')) {
+                tooltip.style.background = "#e6ff00";
+                tooltip.style.color = "#000";
+                tooltip.style.border = "1px solid #000";
+            }
+
+            document.body.appendChild(tooltip);
+            updateTooltipPos(e);
+        }
+    });
+
+    td.addEventListener('mousemove', updateTooltipPos);
+    td.addEventListener('mouseleave', () => {
+        const t = document.getElementById('stat-tooltip');
+        if(t) t.remove();
+    });
+});
+
+function updateTooltipPos(e) {
+    const t = document.getElementById('stat-tooltip');
+    if (t) {
+        t.style.top = (e.clientY + 15) + 'px';
+        t.style.left = (e.clientX + 15) + 'px';
     }
 }
 // --- END OF FIX ---
