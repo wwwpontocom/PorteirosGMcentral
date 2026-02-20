@@ -240,6 +240,9 @@
         </select>
     </div>
     <button onclick="window.print()">Imprimir</button>
+ <button id="btn-instalar" style="display: none; background: #27ae60; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 0.8rem; text-transform: uppercase;">
+        📲 Instalar
+    </button>
 </nav>
 
 <div class="main-header">IRMÃOS / IRMÃS - 1º SEMESTRE 2026</div>
@@ -420,6 +423,33 @@
     </div>
 </div>
 <script>
+ let deferredPrompt;
+const btnInstalar = document.getElementById('btn-instalar');
+
+window.addEventListener('beforeinstallprompt', (e) => {
+    // Prevent Chrome 67 and earlier from automatically showing the prompt
+    e.preventDefault();
+    // Stash the event so it can be triggered later.
+    deferredPrompt = e;
+    // Update UI notify the user they can install the PWA
+    btnInstalar.style.display = 'block';
+});
+
+btnInstalar.addEventListener('click', (e) => {
+    // hide our user interface that shows our A2HS button
+    btnInstalar.style.display = 'none';
+    // Show the prompt
+    deferredPrompt.prompt();
+    // Wait for the user to respond to the prompt
+    deferredPrompt.userChoice.then((choiceResult) => {
+        if (choiceResult.outcome === 'accepted') {
+            console.log('User accepted the A2HS prompt');
+        } else {
+            console.log('User dismissed the A2HS prompt');
+        }
+        deferredPrompt = null;
+    });
+});
    // --- FIX IS HERE ---
 // Replace the existing script with this logic to enable cross-table highlighting
 // --- FIX IS HERE ---
