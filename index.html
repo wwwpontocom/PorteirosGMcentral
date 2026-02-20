@@ -428,21 +428,40 @@
     </div>
 </div>
 <script>
+if ('serviceWorker' in navigator) {
+    const swCode = `
+        self.addEventListener('install', (e) => self.skipWaiting());
+        self.addEventListener('fetch', (e) => e.respondWith(fetch(e.request)));
+    `;
+    const blob = new Blob([swCode], { type: 'text/javascript' });
+    navigator.serviceWorker.register(URL.createObjectURL(blob)).catch(err => console.log("SW Error:", err));
+}
+
+// 2. Install Button Logic
 let deferredPrompt;
 const btnInstalar = document.getElementById('btn-instalar');
 
 window.addEventListener('beforeinstallprompt', (e) => {
+    // Prevent the mini-infobar from appearing on mobile
     e.preventDefault();
+    // Stash the event so it can be triggered later.
     deferredPrompt = e;
-    btnInstalar.style.display = 'inline-block'; // Shows button when installable
+    // Update UI notify the user they can install the PWA
+    if (btnInstalar) btnInstalar.style.display = 'inline-block';
 });
 
-btnInstalar.addEventListener('click', () => {
-    if (deferredPrompt) {
-        deferredPrompt.prompt();
-        deferredPrompt.userChoice.then((choice) => {
-            if (choice.outcome === 'accepted') btnInstalar.style.display = 'none';
-            deferredPrompt = null;
+// Move the click listener here to ensure btnInstalar is already defined
+document.addEventListener('DOMContentLoaded', () => {
+    const btn = document.getElementById('btn-instalar');
+    if (btn) {
+        btn.addEventListener('click', () => {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then((choice) => {
+                    if (choice.outcome === 'accepted') btn.style.display = 'none';
+                    deferredPrompt = null;
+                });
+            }
         });
     }
 });
