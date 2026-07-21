@@ -170,20 +170,34 @@
         }
     }
 
-    /* Print View: Forces the original multi-column layout */
+   /* --- PRINT OPTIMIZATION --- */
     @media print {
-        .calendar-section { 
-            grid-template-columns: repeat(3, 1fr) !important; 
-            display: grid !important;
-            gap: 4px !important;
-        }
-        .assignment-section { 
-            grid-template-columns: 1fr 1fr !important; 
-            display: grid !important;
-            gap: 6px !important;
-        }
         @page { size: A4; margin: 0.5cm; }
         nav { display: none !important; }
+        
+        /* Layout: Duas tabelas por linha na impressão */
+        .calendar-section { 
+            display: grid !important;
+            grid-template-columns: repeat(2, 1fr) !important; /* Duas colunas */
+            gap: 8px !important; 
+        }
+
+        /* Opcional: Se quiser manter o assignment com 2 colunas também */
+        .assignment-section { 
+            display: grid !important;
+            grid-template-columns: 1fr 1fr !important; 
+            gap: 8px !important; 
+        }
+        
+        table { 
+            font-size: 0.55rem !important; /* Levemente menor para caber duas lado a lado */
+            page-break-inside: avoid; 
+        }
+        
+        tr { break-inside: avoid; }
+        
+        /* Força a impressão das cores e fundos */
+        * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
     }
 
 
@@ -203,8 +217,8 @@
                 <option value="Davi">Davi</option><option value="Sonilda">Sonilda</option>
             </optgroup>
             <optgroup label="Grupo B">
-                <option value="José Honorino">José Honorino</option><option value="Ireni">Irene</option>
-                <option value="Andre Senna">André Senna</option><option value="Luciane">Luciane</option>
+                <option value="José Honorino">José Honorino</option><option value="Irene">Irene</option>
+                <option value="André Senna">André Senna</option><option value="Luciane">Luciane</option>
                 <option value="Andre">André</option><option value="Tatiane">Tatiane</option>
                 <option value="Edson">Edson</option><option value="Aline">Aline</option>
             </optgroup>
@@ -212,7 +226,7 @@
                 <option value="Osvaldo">Osvaldo</option><option value="Maria Jasiel">Maria Jasiel</option>
                 <option value="João">João</option><option value="Jessica">Jessica</option>
                 <option value="Gilberto">Gilberto</option><option value="Cristina">Cristina</option>
-                <option value="Zé Maria">Zé Maria</option><option value="Mara">Mara</option>
+                <option value="Delfino">Delfino</option><option value="Keila">Keila</option>
             </optgroup>
             <optgroup label="Grupo D">
                 <option value="Itamar">Itamar</option><option value="Cida">Cida</option>
@@ -223,7 +237,7 @@
             <optgroup label="Grupo E">
                 <option value="Salatiel">Salatiel</option><option value="Gabriela">Gabriela</option>
                 <option value="Antonio Carlos">Antonio Carlos</option><option value="Edileuza">Edileuza</option>
-                <option value="Delfino">Delfino</option><option value="Keila">Keila</option>
+                <option value="Zé Maria">Zé Maria</option><option value="Mara">Mara</option>
                 <option value="Francisco">Francisco</option><option value="TBD">TBD</option>
             </optgroup>
         </select>
@@ -240,143 +254,88 @@
         </select>
     </div>
     <button onclick="window.print()">Imprimir</button>
-<button id="btn-instalar" style="display: none; background: var(--primary-blue); color: var(--highlight-color); border: 2px solid var(--highlight-color); padding: 8px 16px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 0.8rem; text-transform: uppercase; transition: opacity 0.3s;">
+    <button id="btn-instalar" style="display: none; background: var(--primary-blue); color: var(--highlight-color); border: 2px solid var(--highlight-color); padding: 8px 16px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 0.8rem; text-transform: uppercase; transition: opacity 0.3s;">
         📲 Instalar App
     </button>
 </nav>
 
-<div class="main-header">IRMÃOS / IRMÃS - 1º SEMESTRE 2026</div>
+<div class="main-header">IRMÃOS / IRMÃS - 2º SEMESTRE 2026</div>
 
 <div class="calendar-section">
-    <table>
-        <tr class="month-name"><td colspan="3">JANEIRO</td><td>RODIZIO</td></tr>
-        <tr class="row-data" data-group="GRUPO E" data-rodizio="1"><td>1</td><td>Quinta-Feira</td><td>GRUPO E</td><td>1</td></tr>
-        <tr class="row-data" data-group="GRUPO A" data-rodizio="1"><td class="sunday">4</td><td class="sunday">Dom. Manhã</td><td>GRUPO A</td><td>1</td></tr>
-        <tr class="row-data" data-group="GRUPO B" data-rodizio="1"><td class="sunday">4</td><td class="sunday">Dom. Noite</td><td>GRUPO B</td><td>1</td></tr>
-        <tr class="row-data" data-group="GRUPO C" data-rodizio="1"><td>6</td><td>Terça-Feira</td><td>GRUPO C</td><td>1</td></tr>
-        <tr class="row-data" data-group="GRUPO D" data-rodizio="1"><td>8</td><td>Quinta-Feira</td><td>GRUPO D</td><td>1</td></tr>
-        <tr class="row-data" data-group="GRUPO E" data-rodizio="2"><td>11</td><td class="sunday">Dom. Manhã</td><td>GRUPO E</td><td>2</td></tr>
-        <tr class="row-data" data-group="GRUPO A" data-rodizio="2"><td>11</td><td class="sunday">Dom. Noite</td><td>GRUPO A</td><td>2</td></tr>
-        <tr class="row-data" data-group="GRUPO B" data-rodizio="2"><td>13</td><td>Terça-Feira</td><td>GRUPO B</td><td>2</td></tr>
-        <tr class="row-data" data-group="GRUPO C" data-rodizio="2"><td>15</td><td>Quinta-Feira</td><td>GRUPO C</td><td>2</td></tr>
-        <tr class="row-data" data-group="GRUPO D" data-rodizio="2"><td>18</td><td class="sunday">Dom. Manhã</td><td>GRUPO D</td><td>2</td></tr>
-        <tr class="row-data" data-group="GRUPO E" data-rodizio="3"><td>18</td><td class="sunday">Dom. Noite</td><td>GRUPO E</td><td>3</td></tr>
-        <tr class="row-data" data-group="GRUPO A" data-rodizio="3"><td>20</td><td>Terça-Feira</td><td>GRUPO A</td><td>3</td></tr>
-        <tr class="row-data" data-group="GRUPO B" data-rodizio="3"><td>22</td><td>Quinta-Feira</td><td>GRUPO B</td><td>3</td></tr>
-        <tr class="row-data" data-group="GRUPO C" data-rodizio="3"><td>25</td><td class="sunday">Dom. Manhã</td><td>GRUPO C</td><td>3</td></tr>
-        <tr class="row-data" data-group="GRUPO D" data-rodizio="3"><td>25</td><td class="sunday">Dom. Noite</td><td>GRUPO D</td><td>3</td></tr>
-        <tr class="row-data" data-group="GRUPO E" data-rodizio="4"><td>27</td><td>Terça-Feira</td><td>GRUPO E</td><td>4</td></tr>
-        <tr class="row-data" data-group="GRUPO A" data-rodizio="4"><td>29</td><td>Quinta-Feira</td><td>GRUPO A</td><td>4</td></tr>
-    </table>
+   <table>
+    <tr class="month-name">
+        <td colspan="4">JULHO</td>
+        <td>LOCAL</td>
+    </tr>
+
+    <tr class="row-data" data-group="GRUPO D" data-rodizio="1"><td>2</td><td>Quinta-Feira</td><td>GRUPO D</td><td>1</td><td class="local-cell"></td></tr>
+    <tr class="row-data" data-group="GRUPO E" data-rodizio="2"><td class="sunday">5</td><td class="sunday">Domingo Manhã</td><td>GRUPO E</td><td>2</td><td class="local-cell"></td></tr>
+    <tr class="row-data" data-group="GRUPO A" data-rodizio="2"><td class="sunday">5</td><td class="sunday">Domingo Noite</td><td>GRUPO A</td><td>2</td><td class="local-cell"></td></tr>
+    <tr class="row-data" data-group="GRUPO B" data-rodizio="2"><td>7</td><td>Terça-Feira</td><td>GRUPO B</td><td>2</td><td class="local-cell"></td></tr>
+    <tr class="row-data" data-group="GRUPO C" data-rodizio="2"><td>9</td><td>Quinta-Feira</td><td>GRUPO C</td><td>2</td><td class="local-cell"></td></tr>
+    <tr class="row-data" data-group="GRUPO D" data-rodizio="2"><td class="sunday">12</td><td class="sunday">Domingo Manhã</td><td>GRUPO D</td><td>2</td><td class="local-cell"></td></tr>
+    <tr class="row-data" data-group="GRUPO E" data-rodizio="3"><td class="sunday">12</td><td class="sunday">Domingo Noite</td><td>GRUPO E</td><td>3</td><td class="local-cell"></td></tr>
+    <tr class="row-data" data-group="GRUPO A" data-rodizio="3"><td>14</td><td>Terça-Feira</td><td>GRUPO A</td><td>3</td><td class="local-cell"></td></tr>
+    <tr class="row-data" data-group="GRUPO B" data-rodizio="3"><td>16</td><td>Quinta-Feira</td><td>GRUPO B</td><td>3</td><td class="local-cell"></td></tr>
+    <tr class="row-data" data-group="GRUPO C" data-rodizio="3"><td class="sunday">19</td><td class="sunday">Domingo Manhã</td><td>GRUPO C</td><td>3</td><td class="local-cell"></td></tr>
+    <tr class="row-data" data-group="GRUPO D" data-rodizio="3"><td class="sunday">19</td><td class="sunday">Domingo Noite</td><td>GRUPO D</td><td>3</td><td class="local-cell"></td></tr>
+    <tr class="row-data" data-group="GRUPO E" data-rodizio="4"><td>21</td><td>Terça-Feira</td><td>GRUPO E</td><td>4</td><td class="local-cell"></td></tr>
+    <tr class="row-data" data-group="GRUPO A" data-rodizio="4"><td>23</td><td>Quinta-Feira</td><td>GRUPO A</td><td>4</td><td class="local-cell"></td></tr>
+    <tr class="row-data" data-group="GRUPO B" data-rodizio="4"><td class="sunday">26</td><td class="sunday">Domingo Manhã</td><td>GRUPO B</td><td>4</td><td class="local-cell"></td></tr>
+    <tr class="row-data" data-group="GRUPO C" data-rodizio="4"><td class="sunday">26</td><td class="sunday">Domingo Noite</td><td>GRUPO C</td><td>4</td><td class="local-cell"></td></tr>
+    <tr class="row-data" data-group="GRUPO D" data-rodizio="4"><td>28</td><td>Terça-Feira</td><td>GRUPO D</td><td>4</td><td class="local-cell"></td></tr>
+    <tr class="row-data" data-group="GRUPO E" data-rodizio="1"><td>30</td><td>Quinta-Feira</td><td>GRUPO E</td><td>1</td><td class="local-cell"></td></tr>
+</table>
     
     <table>
-        <tr class="month-name"><td colspan="3">FEVEREIRO</td><td>RODIZIO</td></tr>
-        <tr class="row-data" data-group="GRUPO B" data-rodizio="4"><td class="sunday">1</td><td class="sunday">Dom. Manhã</td><td>GRUPO B</td><td>4</td></tr>
-        <tr class="row-data" data-group="GRUPO C" data-rodizio="4"><td class="sunday">1</td><td class="sunday">Dom. Noite</td><td>GRUPO C</td><td>4</td></tr>
-        <tr class="row-data" data-group="GRUPO D" data-rodizio="4"><td>3</td><td>Terça-Feira</td><td>GRUPO D</td><td>4</td></tr>
-        <tr class="row-data" data-group="GRUPO E" data-rodizio="1"><td>5</td><td>Quinta-Feira</td><td>GRUPO E</td><td>1</td></tr>
-        <tr class="row-data" data-group="GRUPO A" data-rodizio="1"><td class="sunday">8</td><td class="sunday">Dom. Manhã</td><td>GRUPO A</td><td>1</td></tr>
-        <tr class="row-data" data-group="GRUPO B" data-rodizio="1"><td class="sunday">8</td><td class="sunday">Dom. Noite</td><td>GRUPO B</td><td>1</td></tr>
-        <tr class="row-data" data-group="GRUPO C" data-rodizio="1"><td>10</td><td>Terça-Feira</td><td>GRUPO C</td><td>1</td></tr>
-        <tr class="row-data" data-group="GRUPO D" data-rodizio="1"><td>12</td><td>Quinta-Feira</td><td>GRUPO D</td><td>1</td></tr>
-        <tr class="row-data" data-group="GRUPO E" data-rodizio="2"><td class="sunday">15</td><td class="sunday">Dom. Manhã</td><td>GRUPO E</td><td>2</td></tr>
-        <tr class="row-data" data-group="GRUPO A" data-rodizio="2"><td class="sunday">15</td><td class="sunday">Dom. Noite</td><td>GRUPO A</td><td>2</td></tr>
-        <tr class="row-data" data-group="GRUPO B" data-rodizio="2"><td>17</td><td>Terça-Feira</td><td>GRUPO B</td><td>2</td></tr>
-        <tr class="row-data" data-group="GRUPO C" data-rodizio="2"><td>19</td><td>Quinta-Feira</td><td>GRUPO C</td><td>2</td></tr>
-        <tr class="row-data" data-group="GRUPO D" data-rodizio="2"><td class="sunday">22</td><td class="sunday">Dom. Manhã</td><td>GRUPO D</td><td>2</td></tr>
-        <tr class="row-data" data-group="GRUPO E" data-rodizio="3"><td class="sunday">22</td><td class="sunday">Dom. Noite</td><td>GRUPO E</td><td>3</td></tr>
-        <tr class="row-data" data-group="GRUPO A" data-rodizio="3"><td>24</td><td>Terça-Feira</td><td>GRUPO A</td><td>3</td></tr>
-        <tr class="row-data" data-group="GRUPO B" data-rodizio="3"><td>26</td><td>Quinta-Feira</td><td>GRUPO B</td><td>3</td></tr>
-    </table>
+    <tr class="month-name">
+        <td colspan="4">AGOSTO</td>
+        <td>LOCAL</td>
+    </tr>
+    <tr class="row-data" data-group="GRUPO A" data-rodizio="1"><td class="sunday">2</td><td class="sunday">Domingo Manhã</td><td>GRUPO A</td><td>1</td><td class="local-cell"></td></tr>
+    <tr class="row-data" data-group="GRUPO B" data-rodizio="1"><td class="sunday">2</td><td class="sunday">Domingo Noite</td><td>GRUPO B</td><td>1</td><td class="local-cell"></td></tr>
+    <tr class="row-data" data-group="GRUPO C" data-rodizio="1"><td>4</td><td>Terça-Feira</td><td>GRUPO C</td><td>1</td><td class="local-cell"></td></tr>
+    <tr class="row-data" data-group="GRUPO D" data-rodizio="1"><td>6</td><td>Quinta-Feira</td><td>GRUPO D</td><td>1</td><td class="local-cell"></td></tr>
+    <tr class="row-data" data-group="GRUPO E" data-rodizio="2"><td class="sunday">9</td><td class="sunday">Domingo Manhã</td><td>GRUPO E</td><td>2</td><td class="local-cell"></td></tr>
+    <tr class="row-data" data-group="GRUPO A" data-rodizio="2"><td class="sunday">9</td><td class="sunday">Domingo Noite</td><td>GRUPO A</td><td>2</td><td class="local-cell"></td></tr>
+    <tr class="row-data" data-group="GRUPO B" data-rodizio="2"><td>11</td><td>Terça-Feira</td><td>GRUPO B</td><td>2</td><td class="local-cell"></td></tr>
+    <tr class="row-data" data-group="GRUPO C" data-rodizio="2"><td>13</td><td>Quinta-Feira</td><td>GRUPO C</td><td>2</td><td class="local-cell"></td></tr>
+    <tr class="row-data" data-group="GRUPO D" data-rodizio="2"><td class="sunday">16</td><td class="sunday">Domingo Manhã</td><td>GRUPO D</td><td>2</td><td class="local-cell"></td></tr>
+    <tr class="row-data" data-group="GRUPO E" data-rodizio="3"><td class="sunday">16</td><td class="sunday">Domingo Noite</td><td>GRUPO E</td><td>3</td><td class="local-cell"></td></tr>
+    <tr class="row-data" data-group="GRUPO A" data-rodizio="3"><td>18</td><td>Terça-Feira</td><td>GRUPO A</td><td>3</td><td class="local-cell"></td></tr>
+    <tr class="row-data" data-group="GRUPO B" data-rodizio="3"><td>20</td><td>Quinta-Feira</td><td>GRUPO B</td><td>3</td><td class="local-cell"></td></tr>
+    <tr class="row-data" data-group="GRUPO C" data-rodizio="3"><td class="sunday">23</td><td class="sunday">Domingo Manhã</td><td>GRUPO C</td><td>3</td><td class="local-cell"></td></tr>
+    <tr class="row-data" data-group="GRUPO D" data-rodizio="3"><td class="sunday">23</td><td class="sunday">Domingo Noite</td><td>GRUPO D</td><td>3</td><td class="local-cell"></td></tr>
+    <tr class="row-data" data-group="GRUPO E" data-rodizio="4"><td>25</td><td>Terça-Feira</td><td>GRUPO E</td><td>4</td><td class="local-cell"></td></tr>
+    <tr class="row-data" data-group="GRUPO A" data-rodizio="4"><td>27</td><td>Quinta-Feira</td><td>GRUPO A</td><td>4</td><td class="local-cell"></td></tr>
+    <tr class="row-data" data-group="GRUPO B" data-rodizio="4"><td class="sunday">30</td><td class="sunday">Domingo Manhã</td><td>GRUPO B</td><td>4</td><td class="local-cell"></td></tr>
+    <tr class="row-data" data-group="GRUPO C" data-rodizio="4"><td class="sunday">30</td><td class="sunday">Domingo Noite</td><td>GRUPO C</td><td>4</td><td class="local-cell"></td></tr>
+</table>
 
     <table>
-        <tr class="month-name"><td colspan="3">MARÇO</td><td>RODIZIO</td></tr>
-        <tr class="row-data" data-group="GRUPO C" data-rodizio="3"><td class="sunday">1</td><td class="sunday">Dom. Manhã</td><td>GRUPO C</td><td>3</td></tr>
-        <tr class="row-data" data-group="GRUPO D" data-rodizio="3"><td class="sunday">1</td><td class="sunday">Dom. Noite</td><td>GRUPO D</td><td>3</td></tr>
-        <tr class="row-data" data-group="GRUPO E" data-rodizio="4"><td>3</td><td>Terça-Feira</td><td>GRUPO E</td><td>4</td></tr>
-        <tr class="row-data" data-group="GRUPO A" data-rodizio="4"><td>5</td><td>Quinta-Feira</td><td>GRUPO A</td><td>4</td></tr>
-        <tr class="row-data" data-group="GRUPO B" data-rodizio="4"><td class="sunday">8</td><td class="sunday">Dom. Manhã</td><td>GRUPO B</td><td>4</td></tr>
-        <tr class="row-data" data-group="GRUPO C" data-rodizio="4"><td class="sunday">8</td><td class="sunday">Dom. Noite</td><td>GRUPO C</td><td>4</td></tr>
-        <tr class="row-data" data-group="GRUPO D" data-rodizio="4"><td>10</td><td>Terça-Feira</td><td>GRUPO D</td><td>4</td></tr>
-        <tr class="row-data" data-group="GRUPO E" data-rodizio="1"><td>12</td><td>Quinta-Feira</td><td>GRUPO E</td><td>1</td></tr>
-        <tr class="row-data" data-group="GRUPO A" data-rodizio="1"><td class="sunday">15</td><td class="sunday">Dom. Manhã</td><td>GRUPO A</td><td>1</td></tr>
-        <tr class="row-data" data-group="GRUPO B" data-rodizio="1"><td class="sunday">15</td><td class="sunday">Dom. Noite</td><td>GRUPO B</td><td>1</td></tr>
-        <tr class="row-data" data-group="GRUPO C" data-rodizio="1"><td>17</td><td>Terça-Feira</td><td>GRUPO C</td><td>1</td></tr>
-        <tr class="row-data" data-group="GRUPO D" data-rodizio="1"><td>19</td><td>Quinta-Feira</td><td>GRUPO D</td><td>1</td></tr>
-        <tr class="row-data" data-group="GRUPO E" data-rodizio="2"><td class="sunday">22</td><td class="sunday">Dom. Manhã</td><td>GRUPO E</td><td>2</td></tr>
-        <tr class="row-data" data-group="GRUPO A" data-rodizio="2"><td class="sunday">22</td><td class="sunday">Dom. Noite</td><td>GRUPO A</td><td>2</td></tr>
-        <tr class="row-data" data-group="GRUPO B" data-rodizio="2"><td>24</td><td>Terça-Feira</td><td>GRUPO B</td><td>2</td></tr>
-        <tr class="row-data" data-group="GRUPO C" data-rodizio="2"><td>26</td><td>Quinta-Feira</td><td>GRUPO C</td><td>2</td></tr>
-        <tr class="row-data" data-group="GRUPO D" data-rodizio="2"><td class="sunday">29</td><td class="sunday">Dom. Manhã</td><td>GRUPO D</td><td>2</td></tr>
-        <tr class="row-data" data-group="GRUPO E" data-rodizio="3"><td class="sunday">29</td><td class="sunday">Dom. Noite</td><td>GRUPO E</td><td>3</td></tr>
-        <tr class="row-data" data-group="GRUPO A" data-rodizio="3"><td>31</td><td>Terça-Feira</td><td>GRUPO A</td><td>3</td></tr>
-    </table>
-</div>
+    <tr class="month-name">
+        <td colspan="4">SETEMBRO</td>
+      <td>LOCAL</td>
+    </tr>
 
-<div class="calendar-section">
-    <table>
-        <tr class="month-name"><td colspan="3">ABRIL</td><td>RODIZIO</td></tr>
-        <tr class="row-data" data-group="GRUPO B" data-rodizio="3"><td>2</td><td>Quinta-Feira</td><td>GRUPO B</td><td>3</td></tr>
-        <tr class="row-data" data-group="GRUPO C" data-rodizio="3"><td class="sunday">5</td><td class="sunday">Dom. Manhã</td><td>GRUPO C</td><td>3</td></tr>
-        <tr class="row-data" data-group="GRUPO D" data-rodizio="3"><td class="sunday">5</td><td class="sunday">Dom. Noite</td><td>GRUPO D</td><td>3</td></tr>
-        <tr class="row-data" data-group="GRUPO E" data-rodizio="4"><td>7</td><td>Terça-Feira</td><td>GRUPO E</td><td>4</td></tr>
-        <tr class="row-data" data-group="GRUPO A" data-rodizio="4"><td>9</td><td>Quinta-Feira</td><td>GRUPO A</td><td>4</td></tr>
-        <tr class="row-data" data-group="GRUPO B" data-rodizio="4"><td class="sunday">12</td><td class="sunday">Dom. Manhã</td><td>GRUPO B</td><td>4</td></tr>
-        <tr class="row-data" data-group="GRUPO C" data-rodizio="4"><td class="sunday">12</td><td class="sunday">Dom. Noite</td><td>GRUPO C</td><td>4</td></tr>
-        <tr class="row-data" data-group="GRUPO D" data-rodizio="4"><td>14</td><td>Terça-Feira</td><td>GRUPO D</td><td>4</td></tr>
-        <tr class="row-data" data-group="GRUPO E" data-rodizio="1"><td>16</td><td>Quinta-Feira</td><td>GRUPO E</td><td>1</td></tr>
-        <tr class="row-data" data-group="GRUPO A" data-rodizio="1"><td class="sunday">19</td><td class="sunday">Dom. Manhã</td><td>GRUPO A</td><td>1</td></tr>
-        <tr class="row-data" data-group="GRUPO B" data-rodizio="1"><td class="sunday">19</td><td class="sunday">Dom. Noite</td><td>GRUPO B</td><td>1</td></tr>
-        <tr class="row-data" data-group="GRUPO C" data-rodizio="1"><td>21</td><td>Terça-Feira</td><td>GRUPO C</td><td>1</td></tr>
-        <tr class="row-data" data-group="GRUPO D" data-rodizio="1"><td>23</td><td>Quinta-Feira</td><td>GRUPO D</td><td>1</td></tr>
-        <tr class="row-data" data-group="GRUPO E" data-rodizio="2"><td class="sunday">26</td><td class="sunday">Dom. Manhã</td><td>GRUPO E</td><td>2</td></tr>
-        <tr class="row-data" data-group="GRUPO A" data-rodizio="2"><td class="sunday">26</td><td class="sunday">Dom. Noite</td><td>GRUPO A</td><td>2</td></tr>
-        <tr class="row-data" data-group="GRUPO B" data-rodizio="2"><td>28</td><td>Terça-Feira</td><td>GRUPO B</td><td>2</td></tr>
-        <tr class="row-data" data-group="GRUPO C" data-rodizio="2"><td>30</td><td>Quinta-Feira</td><td>GRUPO C</td><td>2</td></tr>
-    </table>
-
-    <table>
-        <tr class="month-name"><td colspan="3">MAIO</td><td>RODIZIO</td></tr>
-        <tr class="row-data" data-group="GRUPO D" data-rodizio="2"><td class="sunday">3</td><td class="sunday">Dom. Manhã</td><td>GRUPO D</td><td>2</td></tr>
-        <tr class="row-data" data-group="GRUPO E" data-rodizio="3"><td class="sunday">3</td><td class="sunday">Dom. Noite</td><td>GRUPO E</td><td>3</td></tr>
-        <tr class="row-data" data-group="GRUPO A" data-rodizio="3"><td>5</td><td>Terça-Feira</td><td>GRUPO A</td><td>3</td></tr>
-        <tr class="row-data" data-group="GRUPO B" data-rodizio="3"><td>7</td><td>Quinta-Feira</td><td>GRUPO B</td><td>3</td></tr>
-        <tr class="row-data" data-group="GRUPO C" data-rodizio="3"><td class="sunday">10</td><td class="sunday">Dom. Manhã</td><td>GRUPO C</td><td>3</td></tr>
-        <tr class="row-data" data-group="GRUPO D" data-rodizio="3"><td class="sunday">10</td><td class="sunday">Dom. Noite</td><td>GRUPO D</td><td>3</td></tr>
-        <tr class="row-data" data-group="GRUPO E" data-rodizio="4"><td>12</td><td>Terça-Feira</td><td>GRUPO E</td><td>4</td></tr>
-        <tr class="row-data" data-group="GRUPO A" data-rodizio="4"><td>14</td><td>Quinta-Feira</td><td>GRUPO A</td><td>4</td></tr>
-        <tr class="row-data" data-group="GRUPO B" data-rodizio="4"><td class="sunday">17</td><td class="sunday">Dom. Manhã</td><td>GRUPO B</td><td>4</td></tr>
-        <tr class="row-data" data-group="GRUPO C" data-rodizio="4"><td class="sunday">17</td><td class="sunday">Dom. Noite</td><td>GRUPO C</td><td>4</td></tr>
-        <tr class="row-data" data-group="GRUPO D" data-rodizio="4"><td>19</td><td>Terça-Feira</td><td>GRUPO D</td><td>4</td></tr>
-        <tr class="row-data" data-group="GRUPO E" data-rodizio="1"><td>21</td><td>Quinta-Feira</td><td>GRUPO E</td><td>1</td></tr>
-        <tr class="row-data" data-group="GRUPO A" data-rodizio="1"><td class="sunday">24</td><td class="sunday">Dom. Manhã</td><td>GRUPO A</td><td>1</td></tr>
-        <tr class="row-data" data-group="GRUPO B" data-rodizio="1"><td class="sunday">24</td><td class="sunday">Dom. Noite</td><td>GRUPO B</td><td>1</td></tr>
-        <tr class="row-data" data-group="GRUPO C" data-rodizio="1"><td>26</td><td>Terça-Feira</td><td>GRUPO C</td><td>1</td></tr>
-        <tr class="row-data" data-group="GRUPO D" data-rodizio="1"><td>28</td><td>Quinta-Feira</td><td>GRUPO D</td><td>1</td></tr>
-        <tr class="row-data" data-group="GRUPO E" data-rodizio="2"><td class="sunday">31</td><td class="sunday">Dom. Manhã</td><td>GRUPO E</td><td>2</td></tr>
-        <tr class="row-data" data-group="GRUPO A" data-rodizio="2"><td class="sunday">31</td><td class="sunday">Dom. Noite</td><td>GRUPO A</td><td>2</td></tr>
-    </table>
-
-    <table>
-        <tr class="month-name"><td colspan="3">JUNHO</td><td>RODIZIO</td></tr>
-        <tr class="row-data" data-group="GRUPO B" data-rodizio="2"><td>2</td><td>Terça-Feira</td><td>GRUPO B</td><td>2</td></tr>
-        <tr class="row-data" data-group="GRUPO C" data-rodizio="2"><td>4</td><td>Quinta-Feira</td><td>GRUPO C</td><td>2</td></tr>
-        <tr class="row-data" data-group="GRUPO D" data-rodizio="2"><td class="sunday">7</td><td class="sunday">Dom. Manhã</td><td>GRUPO D</td><td>2</td></tr>
-        <tr class="row-data" data-group="GRUPO E" data-rodizio="3"><td class="sunday">7</td><td class="sunday">Dom. Noite</td><td>GRUPO E</td><td>3</td></tr>
-        <tr class="row-data" data-group="GRUPO A" data-rodizio="3"><td>9</td><td>Terça-Feira</td><td>GRUPO A</td><td>3</td></tr>
-        <tr class="row-data" data-group="GRUPO B" data-rodizio="3"><td>11</td><td>Quinta-Feira</td><td>GRUPO B</td><td>3</td></tr>
-        <tr class="row-data" data-group="GRUPO C" data-rodizio="3"><td class="sunday">14</td><td class="sunday">Dom. Manhã</td><td>GRUPO C</td><td>3</td></tr>
-        <tr class="row-data" data-group="GRUPO D" data-rodizio="3"><td class="sunday">14</td><td class="sunday">Dom. Noite</td><td>GRUPO D</td><td>3</td></tr>
-        <tr class="row-data" data-group="GRUPO E" data-rodizio="4"><td>16</td><td>Terça-Feira</td><td>GRUPO E</td><td>4</td></tr>
-        <tr class="row-data" data-group="GRUPO A" data-rodizio="4"><td>18</td><td>Quinta-Feira</td><td>GRUPO A</td><td>4</td></tr>
-        <tr class="row-data" data-group="GRUPO B" data-rodizio="4"><td class="sunday">21</td><td class="sunday">Dom. Manhã</td><td>GRUPO B</td><td>4</td></tr>
-        <tr class="row-data" data-group="GRUPO C" data-rodizio="4"><td class="sunday">21</td><td class="sunday">Dom. Noite</td><td>GRUPO C</td><td>4</td></tr>
-        <tr class="row-data" data-group="GRUPO D" data-rodizio="4"><td>23</td><td>Terça-Feira</td><td>GRUPO D</td><td>4</td></tr>
-        <tr class="row-data" data-group="GRUPO E" data-rodizio="1"><td>25</td><td>Quinta-Feira</td><td>GRUPO E</td><td>1</td></tr>
-        <tr class="row-data" data-group="GRUPO A" data-rodizio="1"><td class="sunday">28</td><td class="sunday">Dom. Manhã</td><td>GRUPO A</td><td>1</td></tr>
-        <tr class="row-data" data-group="GRUPO B" data-rodizio="1"><td class="sunday">28</td><td class="sunday">Dom. Noite</td><td>GRUPO B</td><td>1</td></tr>
-        <tr class="row-data" data-group="GRUPO C" data-rodizio="1"><td>30</td><td>Terça-Feira</td><td>GRUPO C</td><td>1</td></tr>
-    </table>
+    <tr class="row-data" data-group="GRUPO D" data-rodizio="4"><td>1</td><td>Terça-Feira</td><td>GRUPO D</td><td>4</td><td class="local-cell"></td></tr>
+    <tr class="row-data" data-group="GRUPO E" data-rodizio="1"><td>3</td><td>Quinta-Feira</td><td>GRUPO E</td><td>1</td><td class="local-cell"></td></tr>
+    <tr class="row-data" data-group="GRUPO A" data-rodizio="1"><td class="sunday">6</td><td class="sunday">Domingo Manhã</td><td>GRUPO A</td><td>1</td><td class="local-cell"></td></tr>
+    <tr class="row-data" data-group="GRUPO B" data-rodizio="1"><td class="sunday">6</td><td class="sunday">Domingo Noite</td><td>GRUPO B</td><td>1</td><td class="local-cell"></td></tr>
+    <tr class="row-data" data-group="GRUPO C" data-rodizio="1"><td>8</td><td>Terça-Feira</td><td>GRUPO C</td><td>1</td><td class="local-cell"></td></tr>
+    <tr class="row-data" data-group="GRUPO D" data-rodizio="1"><td>10</td><td>Quinta-Feira</td><td>GRUPO D</td><td>1</td><td class="local-cell"></td></tr>
+    <tr class="row-data" data-group="GRUPO E" data-rodizio="2"><td class="sunday">13</td><td class="sunday">Domingo Manhã</td><td>GRUPO E</td><td>2</td><td class="local-cell"></td></tr>
+    <tr class="row-data" data-group="GRUPO A" data-rodizio="2"><td class="sunday">13</td><td class="sunday">Domingo Noite</td><td>GRUPO A</td><td>2</td><td class="local-cell"></td></tr>
+    <tr class="row-data" data-group="GRUPO B" data-rodizio="2"><td>15</td><td>Terça-Feira</td><td>GRUPO B</td><td>2</td><td class="local-cell"></td></tr>
+    <tr class="row-data" data-group="GRUPO C" data-rodizio="2"><td>17</td><td>Quinta-Feira</td><td>GRUPO C</td><td>2</td><td class="local-cell"></td></tr>
+    <tr class="row-data" data-group="GRUPO D" data-rodizio="2"><td class="sunday">20</td><td class="sunday">Domingo Manhã</td><td>GRUPO D</td><td>2</td><td class="local-cell"></td></tr>
+    <tr class="row-data" data-group="GRUPO E" data-rodizio="3"><td class="sunday">20</td><td class="sunday">Domingo Noite</td><td>GRUPO E</td><td>3</td><td class="local-cell"></td></tr>
+    <tr class="row-data" data-group="GRUPO A" data-rodizio="3"><td>22</td><td>Terça-Feira</td><td>GRUPO A</td><td>3</td><td class="local-cell"></td></tr>
+    <tr class="row-data" data-group="GRUPO B" data-rodizio="3"><td>24</td><td>Quinta-Feira</td><td>GRUPO B</td><td>3</td><td class="local-cell"></td></tr>
+    <tr class="row-data" data-group="GRUPO C" data-rodizio="3"><td class="sunday">27</td><td class="sunday">Domingo Manhã</td><td>GRUPO C</td><td>3</td><td class="local-cell"></td></tr>
+    <tr class="row-data" data-group="GRUPO D" data-rodizio="3"><td class="sunday">27</td><td class="sunday">Domingo Noite</td><td>GRUPO D</td><td>3</td><td class="local-cell"></td></tr>
+    <tr class="row-data" data-group="GRUPO E" data-rodizio="4"><td>29</td><td>Terça-Feira</td><td>GRUPO E</td><td>4</td><td class="local-cell"></td></tr>
+</table>
 </div>
 
 <div class="assignment-section">
@@ -384,41 +343,44 @@
         <table>
             <tr class="assign-header">
                 <td>GRUPO</td><td>RODIZIO</td><td>FRENTE</td><td>LATERAL</td><td>BANHEIRO</td><td><span style="font-size: 0.4rem;">ESTACIONAMENTO</span><br><span style="font-size: 0.4rem;">APOIO SALÃO</span></td>
+            </tr>
             <tr class="row-data" data-group="GRUPO A" data-rodizio="1" data-names="Pelino,Maria,Pedro,Odete,Renzo,Marysol,Davi,Sonilda"><td>A</td><td>1</td><td>Pelino<br>Maria</td><td>Pedro<br>Odete</td><td>Renzo<br>Marysol</td><td>Davi<br>Sonilda</td></tr>
-            <tr class="row-data" data-group="GRUPO B" data-rodizio="1" data-names="José Honorino,Ireni,Andre Senna,Luciane,Andre,Tatiane,Edson,Aline"><td>B</td><td>1</td><td>José Honorino<br>Irene</td><td>André Senna<br>Luciane</td><td>André<br>Tatiane</td><td>Edson<br>Aline</td></tr>
-            <tr class="row-data" data-group="GRUPO C" data-rodizio="1" data-names="Osvaldo,Maria Jasiel,João,Jessica,Gilberto,Cristina,Zé Maria,Mara"><td>C</td><td>1</td><td>Osvaldo<br>Maria Jasiel</td><td>João<br>Jessica</td><td>Gilberto<br>Cristina</td><td>Zé Maria<br>Mara</td></tr>
-            <tr class="row-data" data-group="GRUPO D" data-rodizio="1" data-names="Itamar,Cida,Valter,Leidiane,Paulo,Ines,Mauricio,Tania"><td>D</td><td>1</td><td>Itamar<br>Cida</td><td>Valter<br>Leidiane</td><td>Paulo<br>Inês</td><td>Mauricio<br>Tania</td></tr>
-            <tr class="row-data" data-group="GRUPO E" data-rodizio="1" data-names="Salatiel,Gabriela,Antonio Carlos,Edileuza,Delfino,Keila,Francisco,TBD"><td>E</td><td>1</td><td>Salatiel<br>Gabriela</td><td>Antonio Carlos<br>Edileuza</td><td>Delfino<br>Keila</td><td>Francisco<br>TBD</td></tr>
+            <tr class="row-data" data-group="GRUPO B" data-rodizio="1" data-names="José Honorino,Irene,André Senna,Luciane,Andre,Tatiane,Edson,Aline"><td>B</td><td>1</td><td>José Honorino<br>Irene</td><td>André Senna<br>Luciane</td><td>Andre<br>Tatiane</td><td>Edson<br>Aline</td></tr>
+            <tr class="row-data" data-group="GRUPO C" data-rodizio="1" data-names="Osvaldo,Maria Jasiel,João,Jessica,Gilberto,Cristina,Delfino,Keila"><td>C</td><td>1</td><td>Osvaldo<br>Maria Jasiel</td><td>João<br>Jessica</td><td>Gilberto<br>Cristina</td><td>Delfino<br>Keila</td></tr>
+            <tr class="row-data" data-group="GRUPO D" data-rodizio="1" data-names="Itamar,Cida,Valter,Leidiane,Paulo,Ines,Mauricio,Tania"><td>D</td><td>1</td><td>Itamar<br>Cida</td><td>Valter<br>Leidiane</td><td>Paulo<br>Ines</td><td>Mauricio<br>Tania</td></tr>
+            <tr class="row-data" data-group="GRUPO E" data-rodizio="1" data-names="Salatiel,Gabriela,Antonio Carlos,Edileuza, Francisco,TBD, Zé Maria,Mara"><td>E</td><td>1</td><td>Salatiel<br>Gabriela</td><td>Antonio Carlos<br>Edileuza</td><td>Zé Maria<br>Mara</td><td>Francisco<br>TBD</td></tr>
         </table>
         <table>
             <tr class="assign-header">
                 <td>GRUPO</td><td>RODIZIO</td><td>FRENTE</td><td>LATERAL</td><td>BANHEIRO</td><td><span style="font-size: 0.4rem;">ESTACIONAMENTO</span><br><span style="font-size: 0.4rem;">APOIO SALÃO</span></td>
+            </tr>
             <tr class="row-data" data-group="GRUPO A" data-rodizio="2" data-names="Davi,Sonilda,Pelino,Maria,Pedro,Odete,Renzo,Marysol"><td>A</td><td>2</td><td>Davi<br>Sonilda</td><td>Pelino<br>Maria</td><td>Pedro<br>Odete</td><td>Renzo<br>Marysol</td></tr>
-            <tr class="row-data" data-group="GRUPO B" data-rodizio="2" data-names="Edson,Aline,José Honorino,Ireni,Andre Senna,Luciane,Andre,Tatiane"><td>B</td><td>2</td><td>Edson<br>Aline</td><td>José Honorino<br>Irene</td><td>André Senna<br>Luciane</td><td>André<br>Tatiane</td></tr>
-            <tr class="row-data" data-group="GRUPO C" data-rodizio="2" data-names="Zé Maria,Mara,Osvaldo,Maria Jasiel,João,Jessica,Gilberto,Cristina"><td>C</td><td>2</td><td>Zé Maria<br>Mara</td><td>Osvaldo<br>Maria Jasiel</td><td>João<br>Jessica</td><td>Gilberto<br>Cristina</td></tr>
-            <tr class="row-data" data-group="GRUPO D" data-rodizio="2" data-names="Mauricio,Tania,Itamar,Cida,Valter,Leidiane,Paulo,Ines"><td>D</td><td>2</td><td>Mauricio<br>Tania</td><td>Itamar<br>Cida</td><td>Valter<br>Leidiane</td><td>Paulo<br>Inês</td></tr>
-            <tr class="row-data" data-group="GRUPO E" data-rodizio="2" data-names="Francisco,TBD,Salatiel,Gabriela,Antonio Carlos,Edileuza,Delfino,Keila"><td>E</td><td>2</td><td>Francisco<br>TBD</td><td>Salatiel<br>Gabriela</td><td>Antonio Carlos<br>Edileuza</td><td>Delfino<br>Keila</td></tr>
+            <tr class="row-data" data-group="GRUPO B" data-rodizio="2" data-names="Edson,Aline,José Honorino,Irene,André Senna,Luciane,Andre,Tatiane"><td>B</td><td>2</td><td>Edson<br>Aline</td><td>José Honorino<br>Irene</td><td>André Senna<br>Luciane</td><td>Andre<br>Tatiane</td></tr>
+            <tr class="row-data" data-group="GRUPO C" data-rodizio="2" data-names="Delfino,Keila,Osvaldo,Maria Jasiel,João,Jessica,Gilberto,Cristina"><td>C</td><td>2</td><td>Delfino<br>Keila</td><td>Osvaldo<br>Maria Jasiel</td><td>João<br>Jessica</td><td>Gilberto<br>Cristina</td></tr>
+            <tr class="row-data" data-group="GRUPO D" data-rodizio="2" data-names="Mauricio,Tania,Itamar,Cida,Valter,Leidiane,Paulo,Ines"><td>D</td><td>2</td><td>Mauricio<br>Tania</td><td>Itamar<br>Cida</td><td>Valter<br>Leidiane</td><td>Paulo<br>Ines</td></tr>
+            <tr class="row-data" data-group="GRUPO E" data-rodizio="2" data-names="Francisco,TBD,Salatiel,Gabriela,Antonio Carlos,Edileuza, Zé Maria,Mara"><td>E</td><td>2</td><td>Francisco<br>TBD</td><td>Salatiel<br>Gabriela</td><td>Antonio Carlos<br>Edileuza</td><td>Zé Maria<br>Mara</td></tr>
         </table>
     </div>
     <div style="display:contents">
         <table>
             <tr class="assign-header">
                 <td>GRUPO</td><td>RODIZIO</td><td>FRENTE</td><td>LATERAL</td><td>BANHEIRO</td><td><span style="font-size: 0.4rem;">ESTACIONAMENTO</span><br><span style="font-size: 0.4rem;">APOIO SALÃO</span></td>
+            </tr>
             <tr class="row-data" data-group="GRUPO A" data-rodizio="3" data-names="Renzo,Marysol,Davi,Sonilda,Pelino,Maria,Pedro,Odete"><td>A</td><td>3</td><td>Renzo<br>Marysol</td><td>Davi<br>Sonilda</td><td>Pelino<br>Maria</td><td>Pedro<br>Odete</td></tr>
-            <tr class="row-data" data-group="GRUPO B" data-rodizio="3" data-names="Andre,Tatiane,Edson,Aline,José Honorino,Ireni,Andre Senna,Luciane"><td>B</td><td>3</td><td>André<br>Tatiane</td><td>Edson<br>Aline</td><td>José Honorino<br>Irene</td><td>André Senna<br>Luciane</td></tr>
-            <tr class="row-data" data-group="GRUPO C" data-rodizio="3" data-names="Gilberto,Cristina,Zé Maria,Mara,Osvaldo,Maria Jasiel,João,Jessica"><td>C</td><td>3</td><td>Gilberto<br>Cristina</td><td>Zé Maria<br>Mara</td><td>Osvaldo<br>Maria Jasiel</td><td>João<br>Jessica</td></tr>
-            <tr class="row-data" data-group="GRUPO D" data-rodizio="3" data-names="Paulo,Ines,Mauricio,Tania,Itamar,Cida,Valter,Leidiane"><td>D</td><td>3</td><td>Paulo<br>Inês</td><td>Mauricio<br>Tania</td><td>Itamar<br>Cida</td><td>Valter<br>Leidiane</td></tr>
-            <tr class="row-data" data-group="GRUPO E" data-rodizio="3" data-names="Delfino,Keila,Francisco,TBD,Salatiel,Gabriela,Antonio Carlos,Edileuza"><td>E</td><td>3</td><td>Delfino<br>Keila</td><td>Francisco<br>TBD</td><td>Salatiel<br>Gabriela</td><td>Antonio Carlos<br>Edileuza</td></tr>
+            <tr class="row-data" data-group="GRUPO B" data-rodizio="3" data-names="Andre,Tatiane,Edson,Aline,José Honorino,Irene,André Senna,Luciane"><td>B</td><td>3</td><td>Andre<br>Tatiane</td><td>Edson<br>Aline</td><td>José Honorino<br>Irene</td><td>André Senna<br>Luciane</td></tr>
+            <tr class="row-data" data-group="GRUPO C" data-rodizio="3" data-names="Gilberto,Cristina,Delfino,Keila,Osvaldo,Maria Jasiel,João,Jessica"><td>C</td><td>3</td><td>Gilberto<br>Cristina</td><td>Delfino<br>Keila</td><td>Osvaldo<br>Maria Jasiel</td><td>João<br>Jessica</td></tr>
+            <tr class="row-data" data-group="GRUPO D" data-rodizio="3" data-names="Paulo,Ines,Mauricio,Tania,Itamar,Cida,Valter,Leidiane"><td>D</td><td>3</td><td>Paulo<br>Ines</td><td>Mauricio<br>Tania</td><td>Itamar<br>Cida</td><td>Valter<br>Leidiane</td></tr>
+            <tr class="row-data" data-group="GRUPO E" data-rodizio="3" data-names="Zé Maria,Mara,Francisco,TBD,Salatiel,Gabriela,Antonio Carlos,Edileuza"><td>E</td><td>3</td><td>Zé Maria<br>Mara</td><td>Francisco<br>TBD</td><td>Salatiel<br>Gabriela</td><td>Antonio Carlos<br>Edileuza</td></tr>
         </table>
         <table>
             <tr class="assign-header">
                 <td>GRUPO</td><td>RODIZIO</td><td>FRENTE</td><td>LATERAL</td><td>BANHEIRO</td><td><span style="font-size: 0.4rem;">ESTACIONAMENTO</span><br><span style="font-size: 0.4rem;">APOIO SALÃO</span></td>
             </tr>
             <tr class="row-data" data-group="GRUPO A" data-rodizio="4" data-names="Pedro,Odete,Renzo,Marysol,Davi,Sonilda,Pelino,Maria"><td>A</td><td>4</td><td>Pedro<br>Odete</td><td>Renzo<br>Marysol</td><td>Davi<br>Sonilda</td><td>Pelino<br>Maria</td></tr>
-            <tr class="row-data" data-group="GRUPO B" data-rodizio="4" data-names="Andre Senna,Luciane,Andre,Tatiane,Edson,Aline,José Honorino,Ireni"><td>B</td><td>4</td><td>André Senna<br>Luciane</td><td>André<br>Tatiane</td><td>Edson<br>Aline</td><td>José Honorino<br>Irene</td></tr>
-            <tr class="row-data" data-group="GRUPO C" data-rodizio="4" data-names="João,Jessica,Gilberto,Cristina,Zé Maria,Mara,Osvaldo,Maria Jasiel"><td>C</td><td>4</td><td>João<br>Jessica</td><td>Gilberto<br>Cristina</td><td>Zé Maria<br>Mara</td><td>Osvaldo<br>Maria Jasiel</td></tr>
-            <tr class="row-data" data-group="GRUPO D" data-rodizio="4" data-names="Valter,Leidiane,Paulo,Ines,Mauricio,Tania,Itamar,Cida"><td>D</td><td>4</td><td>Valter<br>Leidiane</td><td>Paulo<br>Inês</td><td>Mauricio<br>Tania</td><td>Itamar<br>Cida</td></tr>
-            <tr class="row-data" data-group="GRUPO E" data-rodizio="4" data-names="Antonio Carlos,Edileuza,Delfino,Keila,Francisco,TBD,Salatiel,Gabriela"><td>E</td><td>4</td><td>Antonio Carlos<br>Edileuza</td><td>Delfino<br>Keila</td><td>Francisco<br>TBD</td><td>Salatiel<br>Gabriela</td></tr>
+            <tr class="row-data" data-group="GRUPO B" data-rodizio="4" data-names="André Senna,Luciane,Andre,Tatiane,Edson,Aline,José Honorino,Irene"><td>B</td><td>4</td><td>André Senna<br>Luciane</td><td>Andre<br>Tatiane</td><td>Edson<br>Aline</td><td>José Honorino<br>Irene</td></tr>
+            <tr class="row-data" data-group="GRUPO C" data-rodizio="4" data-names="João,Jessica,Gilberto,Cristina,Delfino,Keila,Osvaldo,Maria Jasiel"><td>C</td><td>4</td><td>João<br>Jessica</td><td>Gilberto<br>Cristina</td><td>Delfino<br>Keila</td><td>Osvaldo<br>Maria Jasiel</td></tr>
+            <tr class="row-data" data-group="GRUPO D" data-rodizio="4" data-names="Valter,Leidiane,Paulo,Ines,Mauricio,Tania,Itamar,Cida"><td>D</td><td>4</td><td>Valter<br>Leidiane</td><td>Paulo<br>Ines</td><td>Mauricio<br>Tania</td><td>Itamar<br>Cida</td></tr>
+            <tr class="row-data" data-group="GRUPO E" data-rodizio="4" data-names="Antonio Carlos,Edileuza,Zé Maria,Mara,Francisco,TBD,Salatiel,Gabriela"><td>E</td><td>4</td><td>Antonio Carlos<br>Edileuza</td><td>Zé Maria<br>Mara</td><td>Francisco<br>TBD</td><td>Salatiel<br>Gabriela</td></tr>
         </table>
     </div>
 </div>
@@ -435,6 +397,16 @@ if ('serviceWorker' in navigator) {
 // 2. Install Button Logic
 let deferredPrompt;
 const btnInstalar = document.getElementById('btn-instalar');
+
+// --- FORCE PRINT RESPONSIVE ---
+window.addEventListener('beforeprint', () => {
+    console.log("Preparando layout para impressão...");
+    // Isso força o navegador a reprocessar os media queries de print
+});
+
+window.addEventListener('afterprint', () => {
+    console.log("Impressão concluída.");
+});
 
 window.addEventListener('beforeinstallprompt', (e) => {
     // Prevent the mini-infobar from appearing on mobile
@@ -463,6 +435,7 @@ document.addEventListener('DOMContentLoaded', () => {
    // --- FIX IS HERE ---
 // Replace the existing script with this logic to enable cross-table highlighting
 // --- FIX IS HERE ---
+// --- FIX IS HERE ---
 function syncAndHighlight() {
     const nameSelect = document.getElementById('nameSelect');
     const groupSelect = document.getElementById('groupSelect');
@@ -471,12 +444,21 @@ function syncAndHighlight() {
 
     if (selectedName === "Ines") selectedName = "Inês";
 
-    document.querySelectorAll('.row-data').forEach(row => {
+    // 1. Limpa todas as seleções anteriores e limpa o texto/conteúdo das células de local
+    document.querySelectorAll('.calendar-section .row-data').forEach(row => {
         row.classList.remove('highlight');
-        row.querySelectorAll('td').forEach(td => {
-            td.classList.remove('cell-focus');
-            td.removeAttribute('data-tooltip-text');
-        });
+        row.removeAttribute('data-tooltip-text');
+        const localCell = row.querySelector('.local-cell');
+        if (localCell) localCell.innerText = ""; // Limpa o local anterior
+    });
+
+    document.querySelectorAll('.assignment-section .row-data').forEach(row => {
+        row.classList.remove('highlight');
+    });
+
+    document.querySelectorAll('.assignment-section td').forEach(td => {
+        td.classList.remove('cell-focus');
+        td.removeAttribute('data-tooltip-text');
     });
 
     if (selectedName) {
@@ -504,12 +486,20 @@ function syncAndHighlight() {
                 }
             });
 
+            // Atualiza apenas as linhas do grupo correspondente às escalas reais do irmão
             document.querySelectorAll(`.calendar-section .row-data[data-group="${group}"]`)
                 .forEach(row => {
-                    row.classList.add('highlight');
                     const rodNum = row.getAttribute('data-rodizio');
-                    const local = rodizioMap[rodNum] || "Escalado";
-                    row.setAttribute('data-tooltip-text', `Você está: ${local}`);
+                    // Verifica se o irmão está realmente escalado neste rodízio específico
+                    if (rodizioMap[rodNum]) {
+                        row.classList.add('highlight');
+                        const local = rodizioMap[rodNum];
+                        
+                        const localCell = row.querySelector('.local-cell');
+                        if (localCell) localCell.innerText = local;
+                        
+                        row.setAttribute('data-tooltip-text', `Você está: ${local}`);
+                    }
                 });
             
             document.querySelectorAll('.assignment-section td').forEach(td => {
@@ -521,10 +511,11 @@ function syncAndHighlight() {
             });
         }
     } else if (selectedGroup) {
-        document.querySelectorAll(`.row-data[data-group="${selectedGroup}"]`)
+        document.querySelectorAll(`.calendar-section .row-data[data-group="${selectedGroup}"]`)
             .forEach(row => row.classList.add('highlight'));
     }
 }
+// --- END OF FIX ---
 
 // TOOLTIP LOGIC (Sticky for Touch with Close Button)
 function showTooltip(e, td) {
